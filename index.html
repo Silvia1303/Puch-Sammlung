@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Puch DS50">
+<title>Puch DS50 Sammlung</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background-color: #f5f0eb;
+  color: #2c2420;
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+.header {
+  background-color: #2c2420;
+  color: #fff;
+  padding: 16px 20px 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #c8953d;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  color: #2c2420;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.logo-sub {
+  font-size: 10px;
+  color: #c8953d;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.backup-btn-header {
+  background-color: #3d3530;
+  border: 1px solid #5a4f48;
+  color: #c8953d;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.stats-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.stat-chip {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background-color: #3d3530;
+  border: 1px solid #5a4f48;
+  font-size: 12px;
+  color: #bbb;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.stat-chip.active {
+  background-color: #c8953d;
+  border-color: #c8953d;
+  color: #2c2420;
+  font-weight: 700;
+}
+
+.stat-chip .num {
+  font-weight: 700;
+}
+
+.search-bar {
+  padding: 12px 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 2px solid #d9d0c7;
+  border-radius: 10px;
+  color: #2c2420;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+}
+
+.search-bar input:focus {
+  border-color: #c8953d;
+}
+
+.search-bar input::placeholder {
+  color: #a09080;
+}
+
+.content {
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.moped-card {
+  background-color: #ffffff;
+  border: 1px solid #e0d6cc;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.moped-card-image {
+  width: 100%;
+  height: 180px;
+  background-color: #e8e0d6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.moped-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-photo-text {
+  color: #a09080;
+  font-size: 14px;
+}
+
+.moped-status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-sammlung { background-color: #d4edda; color: #276e38; }
+.badge-verkauft { background-color: #d6e4f0; color: #3a6b9f; }
+.badge-projekt { background-color: #fff3cd; color: #856404; }
+
+.moped-card-body { padding: 14px 16px; }
+
+.moped-card-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #2c2420;
+  margin-bottom: 2px;
+}
+
+.moped-card-sub {
+  font-size: 12px;
+  color: #8a7e74;
+  margin-bottom: 10px;
+  font-family: 'Courier New', monospace;
+}
+
+.moped-card-details { display: flex; gap: 20px; flex-wrap: wrap; }
+
+.moped-detail-label {
+  font-size: 10px;
+  color: #8a7e74;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.moped-detail-value {
+  font-size: 14px;
+  color: #2c2420;
+  font-weight: 600;
+}
+
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: #c8953d;
+  color: #ffffff;
+  border: none;
+  font-size: 32px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(200,149,61,0.4);
+  z-index: 90;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  background-color: #ffffff;
+  border-radius: 16px 16px 0 0;
+  overflow-y: auto;
+  padding: 20px 20px 40px 20px;
+}
+
+.modal-handle {
+  width: 36px; height: 4px;
+  background-color: #d0c8c0;
+  border-radius: 2px;
+  margin: 0 auto 16px auto;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #2c2420;
+}
+
+.close-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid #d9d0c7;
+  background-color: #f5f0eb;
+  color: #8a7e74;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8a7e74;
+  margin-bottom: 6px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #f5f0eb;
+  border: 2px solid #e0d6cc;
+  border-radius: 8px;
+  color: #2c2420;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #c8953d; }
+
+.form-textarea { min-height: 80px; resize: vertical; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.photo-upload-area {
+  border: 2px dashed #d0c8c0;
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #faf7f4;
+}
+
+.photo-upload-area .upload-text { font-size: 13px; color: #8a7e74; margin-top: 4px; }
+
+.photo-preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
+
+.photo-preview { aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative; }
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.remove-photo {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background-color: rgba(0,0,0,0.6); color: white;
+  border: none; font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.btn-primary {
+  width: 100%; padding: 14px;
+  background-color: #c8953d; color: #ffffff;
+  border: none; border-radius: 10px;
+  font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px;
+}
+
+.btn-danger {
+  width: 100%; padding: 12px;
+  background-color: #fff0ee; color: #c0392b;
+  border: 2px solid #f5c6c0; border-radius: 10px;
+  font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 8px;
+}
+
+.detail-view {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #f5f0eb; z-index: 150;
+  overflow-y: auto; display: none;
+}
+.detail-view.open { display: block; }
+
+.detail-header {
+  position: sticky; top: 0; z-index: 10;
+  padding: 12px 20px; background-color: #f5f0eb;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #e0d6cc;
+}
+
+.back-btn {
+  background: none; border: none; color: #c8953d;
+  font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+
+.edit-btn {
+  background-color: #ffffff; border: 1px solid #d9d0c7;
+  border-radius: 8px; padding: 8px 14px; color: #2c2420;
+  font-size: 13px; cursor: pointer; font-family: inherit;
+}
+
+.detail-image-carousel {
+  width: 100%; height: 260px;
+  background-color: #e8e0d6; position: relative; overflow: hidden;
+}
+.detail-image-carousel img { width: 100%; height: 100%; object-fit: cover; }
+
+.carousel-dots {
+  position: absolute; bottom: 12px; left: 50%;
+  transform: translateX(-50%); display: flex; gap: 6px;
+}
+.carousel-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background-color: rgba(255,255,255,0.5); cursor: pointer; border: none;
+}
+.carousel-dot.active { background-color: #c8953d; width: 20px; border-radius: 4px; }
+
+.detail-body { padding: 20px; }
+.detail-title { font-size: 24px; font-weight: 800; color: #2c2420; margin-bottom: 4px; }
+.detail-subtitle { font-size: 12px; color: #8a7e74; margin-bottom: 20px; }
+.detail-section { margin-bottom: 20px; }
+.detail-section-title {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 2px;
+  color: #c8953d; font-weight: 700; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 2px solid #e8e0d6;
+}
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.detail-item {
+  padding: 10px 12px; background-color: #ffffff;
+  border-radius: 8px; border: 1px solid #e8e0d6;
+}
+.detail-item.full-width { grid-column: 1 / -1; }
+.detail-item-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: #8a7e74; margin-bottom: 3px; }
+.detail-item-value { font-size: 14px; color: #2c2420; font-weight: 600; }
+.detail-notes {
+  padding: 12px; background-color: #ffffff; border-radius: 8px;
+  border: 1px solid #e8e0d6; font-size: 14px; line-height: 1.6; color: #5a4f44;
+}
+
+.backup-options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.backup-btn {
+  padding: 14px 16px; background-color: #f5f0eb;
+  border: 2px solid #e0d6cc; border-radius: 10px;
+  color: #2c2420; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; gap: 12px;
+  text-align: left; font-family: inherit;
+}
+.backup-btn strong { display: block; margin-bottom: 2px; }
+.backup-btn span { font-size: 12px; color: #8a7e74; }
+
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state h3 { font-size: 18px; color: #5a4f44; margin-bottom: 8px; margin-top: 12px; }
+.empty-state p { color: #8a7e74; font-size: 14px; }
+
+.toast {
+  position: fixed; bottom: 100px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background-color: #2c2420; color: #ffffff;
+  padding: 12px 24px; border-radius: 10px;
+  font-size: 14px; font-weight: 600; z-index: 999;
+  transition: transform 0.3s ease; white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.confirm-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0,0,0,0.5); z-index: 300;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.confirm-overlay.open { display: flex; }
+.confirm-box {
+  background-color: #ffffff; border-radius: 12px; padding: 24px;
+  max-width: 340px; width: 100%; text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+.confirm-box h3 { font-size: 18px; margin-bottom: 8px; color: #2c2420; }
+.confirm-box p { color: #8a7e74; font-size: 14px; margin-bottom: 20px; }
+.confirm-btns { display: flex; gap: 10px; }
+.confirm-btns button {
+  flex: 1; padding: 12px; border-radius: 8px;
+  font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+}
+.cancel-btn { background-color: #f5f0eb; color: #5a4f44; border: 1px solid #d9d0c7; }
+.delete-confirm-btn { background-color: #c0392b; color: #ffffff; border: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">DS</div>
+      <div>
+        <div class="logo-text">Puch DS50</div>
+        <div class="logo-sub">Sammlung</div>
+      </div>
+    </div>
+    <button class="backup-btn-header" onclick="openBackupModal()">Backup</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat-chip active" data-filter="alle" onclick="setFilter('alle')">Alle <span class="num" id="countAll">0</span></div>
+    <div class="stat-chip" data-filter="sammlung" onclick="setFilter('sammlung')">Sammlung <span class="num" id="countSammlung">0</span></div>
+    <div class="stat-chip" data-filter="projekt" onclick="setFilter('projekt')">Projekt <span class="num" id="countProjekt">0</span></div>
+    <div class="stat-chip" data-filter="verkauft" onclick="setFilter('verkauft')">Verkauft <span class="num" id="countVerkauft">0</span></div>
+  </div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Suche nach Modell, Baujahr, Seriennr..." oninput="renderList()">
+</div>
+
+<div class="content" id="mopedList"></div>
+
+<button class="fab" onclick="openForm()">+</button>
+
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <span id="formTitle">Neues Moped</span>
+      <button class="close-btn" onclick="closeForm()">X</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fotos</label>
+      <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+        <div style="font-size:28px;">&#128247;</div>
+        <div class="upload-text">Tippe um Fotos hinzuzufuegen</div>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotos(event)">
+      <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Bezeichnung / Modell *</label>
+      <input type="text" class="form-input" id="fName" placeholder="z.B. Puch DS50 V III">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Baujahr</label>
+        <input type="text" class="form-input" id="fYear" placeholder="z.B. 1972">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Farbe</label>
+        <input type="text" class="form-input" id="fColor" placeholder="z.B. Gruen">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Status</label>
+      <select class="form-select" id="fStatus">
+        <option value="sammlung">In Sammlung</option>
+        <option value="projekt">Projekt / in Arbeit</option>
+        <option value="verkauft">Verkauft</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Typenschein Nr.</label>
+      <input type="text" class="form-input" id="fTypenschein" placeholder="Typenschein-Nummer">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fahrgestell / Seriennummer</label>
+      <input type="text" class="form-input" id="fSerial" placeholder="Fahrgestellnummer">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Motor-Nummer</label>
+      <input type="text" class="form-input" id="fMotor" placeholder="Motor-Nummer">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kaufpreis (EUR)</label>
+        <input type="number" class="form-input" id="fPriceBuy" placeholder="0.00" step="0.01">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Verkaufspreis (EUR)</label>
+        <input type="number" class="form-input" id="fPriceSell" placeholder="0.00" step="0.01">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kaufdatum</label>
+        <input type="date" class="form-input" id="fDateBuy">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Verkaufsdatum</label>
+        <input type="date" class="form-input" id="fDateSell">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Gekauft von</label>
+      <input type="text" class="form-input" id="fBoughtFrom" placeholder="Name / Haendler">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Verkauft an</label>
+      <input type="text" class="form-input" id="fSoldTo" placeholder="Name / Haendler">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Zustand</label>
+      <select class="form-select" id="fCondition">
+        <option value="">-- Bitte waehlen --</option>
+        <option value="original">Originalzustand</option>
+        <option value="restauriert">Restauriert</option>
+        <option value="teilrestauriert">Teilrestauriert</option>
+        <option value="scheunenfund">Scheunenfund</option>
+        <option value="teiletraeger">Teiletraeger</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notizen</label>
+      <textarea class="form-textarea" id="fNotes" placeholder="Besonderheiten, fehlende Teile..."></textarea>
+    </div>
+    <button class="btn-primary" onclick="saveMoped()" id="saveBtn">Speichern</button>
+    <button class="btn-danger" id="deleteBtn" style="display:none" onclick="confirmDelete()">Moped loeschen</button>
+  </div>
+</div>
+
+<div class="detail-view" id="detailView">
+  <div class="detail-header">
+    <button class="back-btn" onclick="closeDetail()">&#8592; Zurueck</button>
+    <button class="edit-btn" onclick="editCurrent()">Bearbeiten</button>
+  </div>
+  <div id="detailContent"></div>
+</div>
+
+<div class="modal-overlay" id="backupModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">
+      <span>Backup und Restore</span>
+      <button class="close-btn" onclick="closeBackupModal()">X</button>
+    </div>
+    <p style="color:#8a7e74;font-size:14px;margin-bottom:16px;">Sichere deine Sammlung oder stelle sie aus einem Backup wieder her.</p>
+    <div class="backup-options">
+      <button class="backup-btn" onclick="exportBackup()">
+        <div><strong>Backup erstellen</strong><span>Speichert alle Daten als JSON-Datei</span></div>
+      </button>
+      <button class="backup-btn" onclick="document.getElementById('importInput').click()">
+        <div><strong>Backup wiederherstellen</strong><span>Importiert eine gespeicherte JSON-Datei</span></div>
+      </button>
+      <input type="file" id="importInput" accept=".json" style="display:none" onchange="importBackup(event)">
+    </div>
+  </div>
+</div>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Moped loeschen?</h3>
+    <p>Dieser Vorgang kann nicht rueckgaengig gemacht werden.</p>
+    <div class="confirm-btns">
+      <button class="cancel-btn" onclick="closeConfirm()">Abbrechen</button>
+      <button class="delete-confirm-btn" onclick="deleteMoped()">Loeschen</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var STORAGE_KEY='puch_ds50_sammlung';
+var mopeds=[];
+var currentFilter='alle';
+var editingId=null;
+var currentDetailId=null;
+var tempPhotos=[];
+
+function loadData(){try{var r=localStorage.getItem(STORAGE_KEY);mopeds=r?JSON.parse(r):[];}catch(e){mopeds=[];}}
+function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(mopeds));}catch(e){showToast('Speicherfehler!');}}
+function genId(){return 'mp_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);}
+
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
+function esc(s){if(!s)return '';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function formatDate(d){if(!d)return '';try{var dt=new Date(d);return ('0'+dt.getDate()).slice(-2)+'.'+('0'+(dt.getMonth()+1)).slice(-2)+'.'+dt.getFullYear();}catch(e){return d;}}
+
+function setFilter(f){
+  currentFilter=f;
+  var chips=document.querySelectorAll('.stat-chip');
+  for(var i=0;i<chips.length;i++) chips[i].classList.toggle('active',chips[i].getAttribute('data-filter')===f);
+  renderList();
+}
+
+function updateCounts(){
+  var s=0,p=0,v=0;
+  for(var i=0;i<mopeds.length;i++){if(mopeds[i].status==='sammlung')s++;else if(mopeds[i].status==='projekt')p++;else if(mopeds[i].status==='verkauft')v++;}
+  document.getElementById('countAll').textContent=mopeds.length;
+  document.getElementById('countSammlung').textContent=s;
+  document.getElementById('countProjekt').textContent=p;
+  document.getElementById('countVerkauft').textContent=v;
+}
+
+function renderList(){
+  var c=document.getElementById('mopedList');
+  var q=document.getElementById('searchInput').value.toLowerCase();
+  var filtered=[];
+  for(var i=0;i<mopeds.length;i++){
+    var m=mopeds[i];
+    if(currentFilter!=='alle'&&m.status!==currentFilter)continue;
+    if(q){var t=((m.name||'')+(m.year||'')+(m.serial||'')+(m.typenschein||'')+(m.color||'')+(m.notes||'')).toLowerCase();if(t.indexOf(q)===-1)continue;}
+    filtered.push(m);
+  }
+  var order={sammlung:0,projekt:1,verkauft:2};
+  filtered.sort(function(a,b){return(order[a.status]||0)-(order[b.status]||0);});
+
+  if(filtered.length===0){
+    var msg=mopeds.length===0?'Noch keine Mopeds':'Keine Treffer';
+    var desc=mopeds.length===0?'Tippe auf + um dein erstes Moped hinzuzufuegen':'Versuche einen anderen Suchbegriff';
+    c.innerHTML='<div class="empty-state"><div style="font-size:50px;opacity:0.4;">&#127949;</div><h3>'+msg+'</h3><p>'+desc+'</p></div>';
+    updateCounts();return;
+  }
+
+  var html='';
+  for(var i=0;i<filtered.length;i++){
+    var m=filtered[i];
+    var bc=m.status==='sammlung'?'badge-sammlung':m.status==='verkauft'?'badge-verkauft':'badge-projekt';
+    var bt=m.status==='sammlung'?'Sammlung':m.status==='verkauft'?'Verkauft':'Projekt';
+    var img=(m.photos&&m.photos.length>0)?'<img src="'+m.photos[0]+'" alt="">':'<div class="no-photo-text">Kein Foto</div>';
+    var det='';
+    if(m.year)det+='<div><div class="moped-detail-label">Baujahr</div><div class="moped-detail-value">'+esc(m.year)+'</div></div>';
+    if(m.color)det+='<div><div class="moped-detail-label">Farbe</div><div class="moped-detail-value">'+esc(m.color)+'</div></div>';
+    if(m.priceBuy)det+='<div><div class="moped-detail-label">Kaufpreis</div><div class="moped-detail-value">EUR '+parseFloat(m.priceBuy).toFixed(2)+'</div></div>';
+    html+='<div class="moped-card" onclick="openDetail(\''+m.id+'\')">';
+    html+='<div class="moped-card-image">'+img+'<span class="moped-status-badge '+bc+'">'+bt+'</span></div>';
+    html+='<div class="moped-card-body"><div class="moped-card-title">'+esc(m.name)+'</div>';
+    html+='<div class="moped-card-sub">'+(m.serial?'SN: '+esc(m.serial):'Keine Seriennr.')+'</div>';
+    html+='<div class="moped-card-details">'+det+'</div></div></div>';
+  }
+  c.innerHTML=html;
+  updateCounts();
+}
+
+function openForm(id){
+  editingId=id||null;tempPhotos=[];
+  document.getElementById('formModal').classList.add('open');
+  document.getElementById('formTitle').textContent=id?'Moped bearbeiten':'Neues Moped';
+  document.getElementById('deleteBtn').style.display=id?'block':'none';
+  var fields=['fName','fYear','fColor','fTypenschein','fSerial','fMotor','fPriceBuy','fPriceSell','fDateBuy','fDateSell','fBoughtFrom','fSoldTo','fNotes'];
+  if(id){
+    var m=null;for(var i=0;i<mopeds.length;i++){if(mopeds[i].id===id){m=mopeds[i];break;}}
+    if(!m)return;
+    document.getElementById('fName').value=m.name||'';document.getElementById('fYear').value=m.year||'';
+    document.getElementById('fColor').value=m.color||'';document.getElementById('fStatus').value=m.status||'sammlung';
+    document.getElementById('fTypenschein').value=m.typenschein||'';document.getElementById('fSerial').value=m.serial||'';
+    document.getElementById('fMotor').value=m.motor||'';document.getElementById('fPriceBuy').value=m.priceBuy||'';
+    document.getElementById('fPriceSell').value=m.priceSell||'';document.getElementById('fDateBuy').value=m.dateBuy||'';
+    document.getElementById('fDateSell').value=m.dateSell||'';document.getElementById('fBoughtFrom').value=m.boughtFrom||'';
+    document.getElementById('fSoldTo').value=m.soldTo||'';document.getElementById('fCondition').value=m.condition||'';
+    document.getElementById('fNotes').value=m.notes||'';
+    tempPhotos=m.photos?m.photos.slice():[];
+  }else{for(var i=0;i<fields.length;i++)document.getElementById(fields[i]).value='';document.getElementById('fStatus').value='sammlung';document.getElementById('fCondition').value='';}
+  renderPhotoPreview();
+}
+
+function closeForm(){document.getElementById('formModal').classList.remove('open');editingId=null;tempPhotos=[];}
+
+function handlePhotos(e){
+  var files=e.target.files;
+  for(var f=0;f<files.length;f++){
+    (function(file){var reader=new FileReader();reader.onload=function(ev){
+      var img=new Image();img.onload=function(){
+        var c=document.createElement('canvas');var MAX=800,w=img.width,h=img.height;
+        if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+        c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        tempPhotos.push(c.toDataURL('image/jpeg',0.7));renderPhotoPreview();
+      };img.src=ev.target.result;};reader.readAsDataURL(file);
+    })(files[f]);
+  }e.target.value='';
+}
+
+function renderPhotoPreview(){
+  var g=document.getElementById('photoPreviewGrid');var html='';
+  for(var i=0;i<tempPhotos.length;i++)html+='<div class="photo-preview"><img src="'+tempPhotos[i]+'" alt=""><button class="remove-photo" onclick="event.stopPropagation();removePhoto('+i+')">X</button></div>';
+  g.innerHTML=html;
+}
+
+function removePhoto(i){tempPhotos.splice(i,1);renderPhotoPreview();}
+
+function saveMoped(){
+  var name=document.getElementById('fName').value.trim();
+  if(!name){showToast('Bitte Bezeichnung eingeben');return;}
+  var data={name:name,year:document.getElementById('fYear').value.trim(),color:document.getElementById('fColor').value.trim(),status:document.getElementById('fStatus').value,typenschein:document.getElementById('fTypenschein').value.trim(),serial:document.getElementById('fSerial').value.trim(),motor:document.getElementById('fMotor').value.trim(),priceBuy:document.getElementById('fPriceBuy').value,priceSell:document.getElementById('fPriceSell').value,dateBuy:document.getElementById('fDateBuy').value,dateSell:document.getElementById('fDateSell').value,boughtFrom:document.getElementById('fBoughtFrom').value.trim(),soldTo:document.getElementById('fSoldTo').value.trim(),condition:document.getElementById('fCondition').value,notes:document.getElementById('fNotes').value.trim(),photos:tempPhotos};
+  if(editingId){for(var i=0;i<mopeds.length;i++){if(mopeds[i].id===editingId){for(var k in data)mopeds[i][k]=data[k];mopeds[i].updatedAt=new Date().toISOString();break;}}showToast('Moped aktualisiert!');}
+  else{data.id=genId();data.createdAt=new Date().toISOString();mopeds.push(data);showToast('Moped hinzugefuegt!');}
+  saveData();renderList();closeForm();if(currentDetailId)openDetail(currentDetailId);
+}
+
+function confirmDelete(){document.getElementById('confirmOverlay').classList.add('open');}
+function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');}
+function deleteMoped(){if(editingId){var arr=[];for(var i=0;i<mopeds.length;i++){if(mopeds[i].id!==editingId)arr.push(mopeds[i]);}mopeds=arr;saveData();renderList();showToast('Moped geloescht');}closeConfirm();closeForm();closeDetail();}
+
+function openDetail(id){
+  var m=null;for(var i=0;i<mopeds.length;i++){if(mopeds[i].id===id){m=mopeds[i];break;}}
+  if(!m)return;currentDetailId=id;
+  var condMap={original:'Originalzustand',restauriert:'Restauriert',teilrestauriert:'Teilrestauriert',scheunenfund:'Scheunenfund',teiletraeger:'Teiletraeger'};
+  var statusMap={sammlung:'In Sammlung',projekt:'Projekt',verkauft:'Verkauft'};
+  var carousel='';
+  if(m.photos&&m.photos.length>0){carousel='<img src="'+m.photos[0]+'" id="detailMainPhoto" alt="">';if(m.photos.length>1){carousel+='<div class="carousel-dots">';for(var i=0;i<m.photos.length;i++)carousel+='<div class="carousel-dot'+(i===0?' active':'')+'" onclick="showPhoto('+i+')"></div>';carousel+='</div>';}}
+  else{carousel='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#a09080;">Kein Foto</div>';}
+  var info=[];
+  if(m.status)info.push({l:'Status',v:statusMap[m.status]||m.status,f:false});
+  if(m.year)info.push({l:'Baujahr',v:m.year,f:false});if(m.color)info.push({l:'Farbe',v:m.color,f:false});
+  if(m.condition)info.push({l:'Zustand',v:condMap[m.condition]||m.condition,f:false});
+  if(m.typenschein)info.push({l:'Typenschein',v:m.typenschein,f:true});
+  if(m.serial)info.push({l:'Fahrgestell / Seriennr.',v:m.serial,f:true});
+  if(m.motor)info.push({l:'Motor-Nr.',v:m.motor,f:true});
+  var prices=[];
+  if(m.priceBuy)prices.push({l:'Kaufpreis',v:'EUR '+parseFloat(m.priceBuy).toFixed(2),f:false});
+  if(m.priceSell)prices.push({l:'Verkaufspreis',v:'EUR '+parseFloat(m.priceSell).toFixed(2),f:false});
+  if(m.dateBuy)prices.push({l:'Kaufdatum',v:formatDate(m.dateBuy),f:false});
+  if(m.dateSell)prices.push({l:'Verkaufsdatum',v:formatDate(m.dateSell),f:false});
+  if(m.boughtFrom)prices.push({l:'Gekauft von',v:m.boughtFrom,f:false});
+  if(m.soldTo)prices.push({l:'Verkauft an',v:m.soldTo,f:false});
+  if(m.priceBuy&&m.priceSell){var diff=parseFloat(m.priceSell)-parseFloat(m.priceBuy);prices.push({l:'Gewinn/Verlust',v:(diff>=0?'+':'')+' EUR '+diff.toFixed(2),f:true});}
+  var infoH='';for(var i=0;i<info.length;i++)infoH+='<div class="detail-item'+(info[i].f?' full-width':'')+'"><div class="detail-item-label">'+info[i].l+'</div><div class="detail-item-value">'+esc(info[i].v)+'</div></div>';
+  var priceH='';if(prices.length>0){priceH='<div class="detail-section"><div class="detail-section-title">Kauf und Verkauf</div><div class="detail-grid">';for(var i=0;i<prices.length;i++)priceH+='<div class="detail-item'+(prices[i].f?' full-width':'')+'"><div class="detail-item-label">'+prices[i].l+'</div><div class="detail-item-value">'+esc(prices[i].v)+'</div></div>';priceH+='</div></div>';}
+  var notesH='';if(m.notes)notesH='<div class="detail-section"><div class="detail-section-title">Notizen</div><div class="detail-notes">'+esc(m.notes).replace(/\n/g,'<br>')+'</div></div>';
+  document.getElementById('detailContent').innerHTML='<div class="detail-image-carousel">'+carousel+'</div><div class="detail-body"><div class="detail-title">'+esc(m.name)+'</div><div class="detail-subtitle">Angelegt am '+formatDate(m.createdAt)+(m.updatedAt?' - Aktualisiert '+formatDate(m.updatedAt):'')+'</div><div class="detail-section"><div class="detail-section-title">Fahrzeugdaten</div><div class="detail-grid">'+infoH+'</div></div>'+priceH+notesH+'</div>';
+  document.getElementById('detailView').classList.add('open');
+}
+
+function showPhoto(i){var m=null;for(var j=0;j<mopeds.length;j++){if(mopeds[j].id===currentDetailId){m=mopeds[j];break;}}if(!m||!m.photos)return;document.getElementById('detailMainPhoto').src=m.photos[i];var dots=document.querySelectorAll('.carousel-dot');for(var j=0;j<dots.length;j++)dots[j].classList.toggle('active',j===i);}
+function closeDetail(){document.getElementById('detailView').classList.remove('open');currentDetailId=null;}
+function editCurrent(){if(currentDetailId){closeDetail();setTimeout(function(){openForm(currentDetailId);},100);}}
+function openBackupModal(){document.getElementById('backupModal').classList.add('open');}
+function closeBackupModal(){document.getElementById('backupModal').classList.remove('open');}
+
+function exportBackup(){
+  var data={version:1,app:'Puch DS50 Sammlung',exportDate:new Date().toISOString(),mopeds:mopeds};
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;
+  a.download='puch-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  showToast('Backup erstellt!');closeBackupModal();
+}
+
+function importBackup(e){
+  var file=e.target.files[0];if(!file)return;
+  var reader=new FileReader();reader.onload=function(ev){
+    try{var data=JSON.parse(ev.target.result);if(data.mopeds&&Array.isArray(data.mopeds)){mopeds=data.mopeds;saveData();renderList();showToast(mopeds.length+' Mopeds importiert!');}else{showToast('Ungueltige Datei');}}
+    catch(err){showToast('Fehler beim Import');}closeBackupModal();};
+  reader.readAsText(file);e.target.value='';
+}
+
+loadData();
+renderList();
+</script>
+</body>
+</html>
